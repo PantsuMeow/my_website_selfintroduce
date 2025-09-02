@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.tomys.top/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Mar 2025 03:32:06 GMT -->
+<head>
+  <meta charset="UTF-8">
+  <title>PantsuMeow~</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<!--   <meta name="keywords" content="TomyJan,荼蘼,主页">
+  <meta name="description" content="TomyJan的个人主页"> -->
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <link rel="stylesheet" href="assets/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+<!--   <link rel="stylesheet" href="https://font.sec.miui.com/font/css?family=MiSans:400,700:MiSans" /> -->
+  <script src="assets/jquery/jquery.min.js"></script>
+  <script src="assets/aplayer/APlayer.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: MiSans;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    #loading-overlay::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: -50px;
+      width: calc(100% + 100px);
+      height: calc(100% + 100px);
+      background-color: rgba(0, 0, 0, 0.9);
+      background-image: url('assets/background.avif');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(10px);
+      z-index: -1;
+    }
+
+    .loading-spinner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 80px;
+    }
+
+    .loading-spinner div {
+      width: 15px;
+      height: 15px;
+      background-color: white;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .loading-spinner div:nth-child(2) {
+      animation-delay: -0.32s;
+    }
+
+    .loading-spinner div:nth-child(3) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes bounce {
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    #loading-text {
+      margin-top: 100px;
+      text-align: center;
+      color: white;
+      font-size: 1.6em;
+    }
+
+    /* 深色模式使用不同的背景 */
+    @media (prefers-color-scheme: dark) {
+      #loading-overlay::before {
+        background-image: url('assets/background.avif');
+      }
+    }
+
+  </style>
+  <!-- 魔法阵绘制 -->
+  <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          background: transparent;
+          min-height: 100vh;
+          overflow: hidden;
+          font-family: 'Arial', sans-serif;
+          cursor: pointer;
+      }
+      
+      /* 旋转动画 */
+      @keyframes rotate {
+          0% {
+              transform: translate(-50%, -50%) rotate(0deg);
+          }
+          100% {
+              transform: translate(-50%, -50%) rotate(360deg);
+          }
+      }
+      
+      /* 关键优化：使魔法阵不阻挡鼠标事件 */
+      .magic-container {
+          pointer-events: none;
+      }
+  </style>
+</head>
+
+<body>
+  <!-- 加载遮罩层 -->
+  <div id="loading-overlay">
+    <div class="loading-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div id="loading-text">&nbsp;&nbsp;Loading...</div>
+  </div>
+
+  <div id="container" style="display: none;">
+    <video id="background_video" loop muted>你的浏览器好像不支持内嵌视频诶，换个浏览器试试吧~</video>
+    <!-- #video_cover 是默认的视频封面 -->
+    <div id="video_cover"></div>
+    <!-- #overlay 遮罩层 -->
+    <div id="overlay"></div>
+    <!-- #video_controls 用来控制视频静音、取消静音 -->
+    <div id="video_controls">
+      <span id="mute">
+        <i class="fa-solid fa-volume-xmark"></i>
+      </span>
+    </div>
+    <!-- section 中添加任意你想展示的HTML内容 -->
+    <section id="main_content">
+      <div class="loading">
+        <div class="spinner">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+      </div>
+      <main>
+        <div class="content">
+          <div class="left">
+            <div class="avatar">
+              <img src="assets/head.png">
+            </div>
+            <ul class="menu">
+              <li>
+                <a goto="#home" class="active">主页</a>
+              </li>
+<!--               <li>
+                <a goto="#archives">ARCHIVES</a>
+              </li> -->
+              <li>
+                <a goto="#contact">站点</a>
+              </li>
+              <li>
+                <a goto="#donate">捐赠</a>
+              </li>
+            </ul>
+            <div class="copyright">
+              Made by
+              <a href="https://blog.pantsu0721.top/" target="_blank">PantsuMeow</a>
+            </div>
+          </div>
+          <div class="right">
+            <section id="home" class="active">
+              <h1>PantsuMeow</h1>
+              <p>
+                我是 PantsuMeow ，防御力+3000<br>
+                来自？？ ，现居基斯蒂亚大陆， 是"大陆独家服务器"的管理者？<br>
+                <del>黄游制作者</del> 游戏开发者，想要拯救世界(满足自己)的技术宅<br>
+                专业妹控 / 腿控 / 萝莉控<br>
+                二次元禁断综合征患者
+                <br>
+                <br>
+                『 彷徨える孤高の魂は、拠り所を必要としねえんだよ。 』<br>
+                <br>
+              </p>
+            </section>
+<!--             <section id="archives">
+              <h1>近期文章</h1>
+              <ul class="archive-list">
+                <li>Loading...</li>
+              </ul>
+            </section> -->
+            <section id="contact">
+              <h1>站点索引</h1>
+              <div class="items">
+                <a href="https://blog.pantsu0721.top/" target="_blank">
+                  <i class="fa-duotone fa-solid fa-blog"></i>
+                  <span>Blog</span>
+                </a>
+                <a href="https://github.com/PantsuMeow" target="_blank">
+                  <i class="fa-brands fa-github"></i>
+                  <span>Github</span>
+                </a>
+<!--                 <a href="https://go.tomys.top/" target="_blank">
+                  <i class="fa-solid fa-globe"></i>
+                  <span>Start</span>
+                </a>
+                <a href="https://mirror.tomys.top/" target="_blank">
+                  <i class="fa-solid fa-file-arrow-down"></i>
+                  <span>Mirrors</span>
+                </a>
+                <a href="https://qun.tomys.top/" target="_blank">
+                  <i class="fa-brands fa-qq"></i>
+                  <span>QGroup</span>
+                </a> -->
+                <a href="https://t.me/+WS3h2IJX1EI3NTM1" target="_blank">
+                  <i class="fa-brands fa-telegram"></i>
+                  <span>Telegram</span>
+                </a>
+                <a href="https://blog.pantsu0721.top/ciallo/ciallo.html" target="_blank">
+                  <i class="fa-solid fa-star"></i>
+                  <span>Ciallo~</span>
+                </a>
+              </div>
+            </section>
+            <section id="donate">
+              <h1>投喂我！</h1>
+              <p>
+                <br>
+                贫穷限制了我的想象力，创造力，巧克力...<br>
+                每一个赞助，都将让一个想法成为现实。<br>
+                <br><a href="https://blog.pantsu0721.top/sponsor/wechat.png" target="_blank" title="我想吃巧克力！">
+                  <font color="black">赞助胖次</font>
+                </a>
+              </p>
+            </section>
+          </div>
+        </div>
+        <footer>
+<!--           <br />
+          <p id="hitokoto">Loading...</p>
+          <br /> -->
+
+          <div>
+            <div>
+
+              <!--下面是运行时间统计代码-->
+              <script>
+                function secondToDate(second) {
+                  if (!second) {
+                    return 0;
+                  }
+                  var time = new Array(0, 0, 0, 0, 0);
+                  if (second >= 365 * 24 * 3600) {
+                    time[0] = parseInt(second / (365 * 24 * 3600));
+                    second %= 365 * 24 * 3600;
+                  }
+                  if (second >= 24 * 3600) {
+                    time[1] = parseInt(second / (24 * 3600));
+                    second %= 24 * 3600;
+                  }
+                  if (second >= 3600) {
+                    time[2] = parseInt(second / 3600);
+                    second %= 3600;
+                  }
+                  if (second >= 60) {
+                    time[3] = parseInt(second / 60);
+                    second %= 60;
+                  }
+                  if (second > 0) {
+                    time[4] = second;
+                  }
+                  return time;
+                }
+              </script>
+              <script type="text/javascript" language="javascript">
+                function setTime(createTimestamp) {
+                  // 获取当前时间戳（十位），并加上8小时的偏移量
+                  let currentTimestamp = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
+
+                  // 计算时间差（秒）
+                  let elapsed = currentTimestamp - createTimestamp;
+
+                  // 转换为年、天、时、分、秒
+                  let years = Math.floor(elapsed / (365 * 24 * 60 * 60));
+                  elapsed %= (365 * 24 * 60 * 60);
+                  let days = Math.floor(elapsed / (24 * 60 * 60));
+                  elapsed %= (24 * 60 * 60);
+                  let hours = Math.floor(elapsed / (60 * 60));
+                  elapsed %= (60 * 60);
+                  let minutes = Math.floor(elapsed / 60);
+                  let seconds = elapsed % 60;
+
+                  // 更新页面内容
+                  let element = document.getElementById("htmer_time");
+                  if (element) {
+                    element.innerHTML = `${years}年${days}天${hours}时${minutes}分${seconds}秒`;
+                  }
+                }
+
+                // 设置初始建站时间戳（十位时间戳：2020-07-15 18:00:00 UTC）
+                let create_time = 1729296000;
+
+                // 每秒更新
+                setInterval(() => setTime(create_time), 1000);
+              </script>
+              <span>小站已运行 <span id="htmer_time">...</span></span>
+              <!--运行时间代码结束位置-->
+          <br />
+        </footer>
+
+      </main>
+      <script src="assets/js/main.js"></script>
+    </section>
+    <script src="assets/js/video.js"></script>
+    <script>
+      (function () {
+        var bv = new Bideo();
+        //视频背景直链数组 rain 心火 萤之森
+        // var videoUrls = [
+        // 'https://mirror.tomys.top/d/189Cloud/tomyjan-websites/static/video/av95473051_%E2%80%9CDo%20You%20Like%20Rain%E2%80%9D%20%E2%80%9CI%20Prefer%20You%E2%80%9D_2K.mp4?sign=l7jUsLmGNnZbujtD4HeXqEA4MvC2lcFOFn1dKl3WXV8=:0',
+        // 'https://mirror.tomys.top/d/189Cloud/tomyjan-websites/static/video/av802039278_%E2%80%9C%E8%8B%A5%E5%BF%83%E7%81%AB%E7%BB%9A%E7%83%82%EF%BC%8C%E4%BA%BA%E4%BA%A6%E4%B8%8E%E7%83%9F%E8%8A%B1%E5%85%B1%E6%9F%93%E2%80%9D_2K.mp4?sign=yBhJNT5F7L9uTdZYuNCfM1YLpb8vI9GTtgrwLkC3cts=:0',
+        // 'https://mirror.tomys.top/d/189Cloud/tomyjan-websites/static/video/av89474889_%E8%8D%A7%E4%B9%8B%E6%A3%AE.mp4?sign=n6T4tRGOT-ybnsTZnUKvAJ87Ss1RlLuiE_YGtkgzBi0=:0'
+        // ];
+        var videoUrls = [
+/*          'assets/video/01.mp4',*/
+/*          'assets/video/02.mp4',
+          'assets/video/03.mp4',
+          'assets/video/04.mp4',*/
+/*          'assets/video/05.mp4'*/
+          'https://1253934854.vod2.myqcloud.com/a89107cevodcq1253934854/e208855e3270835015471114876/iAbeVyX87O8A.mp4?bili-avid=95473051',
+          'https://holcc-cdn.haier.net/lemc/aliyun2/20250420/907ad2b043aa43f48f3a385a744fc0b7.mp4',
+          'https://holcc-cdn.haier.net/lemc/aliyun2/20250420/becd3b46965744988e4219e92da93db7.mp4',
+          'https://holcc-cdn.haier.net/lemc/aliyun2/20250420/a7f3647f2d0549be84fb09fc46a5b9b7.mp4',
+          'https://1253934854.vod2.myqcloud.com/a89107cevodcq1253934854/9e4c871a3270835015446138405/A2whnUfubTgA.mp4?bili-avid=802039278',
+          'https://1253934854.vod2.myqcloud.com/a89107cevodcq1253934854/ccf9295d3270835015467515037/khX5M4cLkukA.mp4?bili-avid=89474889'
+        ];
+        var videoUrl = videoUrls[Math.floor(Math.random() * videoUrls.length)];
+        bv.init({
+          // Video元素
+          videoEl: document.querySelector('#background_video'),
+          // 容器元素
+          container: document.querySelector('body'),
+          // 自适应调整
+          resize: true,
+          // autoplay: false,
+          muteButton: document.querySelector('#mute'),
+          // 加载视频源, 根据实际业务更换自己的视频源文件
+          src: [
+            {
+              src: videoUrl,
+              type: 'video/mp4'
+            }
+          ],
+          // 一旦视频加载后即将视频封面隐藏
+          onLoad: function () {
+            document.querySelector('#video_cover').style.display = 'none';
+            document.querySelector('#mute i').className = 'fa-solid fa-volume-xmark';
+          }
+        });
+      }());
+    </script>
+  </div>
+
+  <script>
+    // 页面加载完成后移除遮罩, 显示内容, 动态调整备案号
+    window.addEventListener('load', () => {
+      document.getElementById('loading-overlay').style.display = 'none';
+      document.getElementById('container').style.display = 'block';
+      const hostname = document.referrer ? new URL(document.html).hostname : window.location.hostname;
+      /*if (hostname.endsWith('tomys.top')) {
+        document.getElementById('links-tomys-top').style.display = 'block';
+      } else if (hostname.endsWith('amoe.html')) {
+        document.getElementById('link-amoe-cc').style.display = 'block';
+      } else if (hostname.endsWith('tomyjan.com')) {
+        document.getElementById('links-tomyjan-com').style.display = 'block';
+      } else if (hostname.endsWith('vov.moe') || hostname.endsWith('misaka.site') || hostname.endsWith('ctx.cm') || hostname.endsWith('tu.edu.kg') || hostname.endsWith('tomy.pp.ua') || hostname.endsWith('tomyjan.pp.ua') || hostname.endsWith('喵.cf') || hostname.endsWith('喵.tk') || hostname.endsWith('tomyjan.cf') || hostname.endsWith('tomyjan.gq') || hostname.endsWith('tomyjan.tk') || hostname.endsWith('荼蘼.gq') || hostname.endsWith('荼蘼.tk') || hostname.endsWith('tomyjan.html')) {
+        document.getElementById('links-nothing').style.display = 'block';
+      } else if (hostname.includes('localhost') || hostname.includes('127.0.0.') || hostname.includes('10.0.') || hostname.includes('10.1.')) {
+        document.getElementById('links-local').style.display = 'block';
+      } else {
+        document.getElementById('links-unk').style.display = 'block';
+      }*/
+    });
+  </script>
+<!-- 引入 Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+  /* 按钮样式 */
+  #toggle-main-btn {
+    position: fixed;
+    right: 28px;
+    bottom: 70px;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, opacity 0.5s ease-in-out;
+  }
+
+  /* 鼠标悬停时放大 */
+  #toggle-main-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* main 渐变隐藏/显示 */
+  main {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+  }
+
+  .hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<!-- 按钮 -->
+<button id="toggle-main-btn">
+  <i id="toggle-icon" class="fa-solid fa-eye"></i>
+</button>
+
+<script>
+  document.getElementById("toggle-main-btn").addEventListener("click", function() {
+    var mainElement = document.querySelector("main");
+    var icon = document.getElementById("toggle-icon");
+
+    if (mainElement.classList.contains("hidden")) {
+      mainElement.classList.remove("hidden");
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    } else {
+      mainElement.classList.add("hidden");
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    }
+  });
+</script>
+
+<!-- 魔法阵绘制 -->
+
+<script>
+    document.addEventListener('click', function(e) {
+        // 创建魔法阵容器 - 缩小为80%
+        const magicCircle = document.createElement('div');
+        magicCircle.className = 'magic-container';
+        magicCircle.style.position = 'fixed';
+        magicCircle.style.left = `${e.clientX}px`;
+        magicCircle.style.top = `${e.clientY}px`;
+        magicCircle.style.transform = 'translate(-50%, -50%)';
+        magicCircle.style.width = '80px';
+        magicCircle.style.height = '80px';
+        magicCircle.style.zIndex = '9999';
+        
+        // 创建Canvas元素 - 缩小为80%
+        const canvas = document.createElement('canvas');
+        canvas.width = 80;
+        canvas.height = 80;
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        
+        // 添加到魔法阵容器
+        magicCircle.appendChild(canvas);
+        
+        // 添加到页面
+        document.body.appendChild(magicCircle);
+        
+        // 决定魔法阵类型（50%概率为黄金魔法阵）
+        const isGolden = Math.random() < 0.5;
+        
+        // 绘制魔法阵
+        drawMagicCircle(canvas, magicCircle, isGolden);
+    });
+    
+    function drawMagicCircle(canvas, container, isGolden) {
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 24; // 缩小为80%
+        
+        // 定义颜色方案
+        const colors = {
+            // 普通魔法阵颜色
+            normal: {
+                triangle1: '#00f7ff', // 蓝色
+                triangle2: '#ff00ff', // 紫色
+                innerCircle: '#FF69B4', // 粉色
+                innerRingStart: 'rgba(255, 105, 180, 0.8)',
+                innerRingMid: 'rgba(200, 100, 255, 0.6)',
+                innerRingEnd: 'rgba(100, 0, 255, 0.2)',
+                outerRing1: 'rgba(255, 105, 180, 0.7)',
+                outerRing2: 'rgba(150, 50, 255, 0.4)',
+                glowColor1: '#FF69B4',
+                glowColor2: 'rgba(255, 105, 180, 0.6)'
+            },
+            // 黄金魔法阵颜色
+            golden: {
+                triangle1: '#FFD700', // 亮金色
+                triangle2: '#FFD700', // 亮金色
+                innerCircle: '#FFD700', // 亮金色
+                innerRingStart: 'rgba(255, 215, 0, 0.8)',
+                innerRingMid: 'rgba(255, 215, 0, 0.6)',
+                innerRingEnd: 'rgba(255, 215, 0, 0.2)',
+                outerRing1: 'rgba(255, 215, 0, 0.7)',
+                outerRing2: 'rgba(255, 215, 0, 0.4)',
+                glowColor1: '#FFD700',
+                glowColor2: 'rgba(255, 215, 0, 0.6)'
+            }
+        };
+        
+        // 根据类型选择颜色方案
+        const color = isGolden ? colors.golden : colors.normal;
+        
+        // 计算六芒星的6个顶点
+        const points = [];
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i - Math.PI / 6;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            points.push({x, y});
+        }
+        
+        // 定义两个三角形的顶点顺序
+        const triangle1 = [0, 2, 4, 0];
+        const triangle2 = [1, 3, 5, 1];
+        
+        let currentStep = 0;
+        let progress = 0;
+        const totalSteps = 3;
+        
+        // 动画函数
+        function animate() {
+            if (currentStep >= totalSteps) {
+                // 六芒星绘制完成，开始绘制圆形冲击波
+                drawCircles();
+                return;
+            }
+            
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制已经完成的线段
+            // 正三角形 - 添加发光效果
+            ctx.beginPath();
+            ctx.moveTo(points[triangle1[0]].x, points[triangle1[0]].y);
+            for (let i = 0; i < currentStep; i++) {
+                ctx.lineTo(points[triangle1[i + 1]].x, points[triangle1[i + 1]].y);
+            }
+            ctx.strokeStyle = color.triangle1;
+            ctx.lineWidth = 2;
+            ctx.shadowColor = color.triangle1;
+            ctx.shadowBlur = 8;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // 倒三角形 - 添加发光效果
+            ctx.beginPath();
+            ctx.moveTo(points[triangle2[0]].x, points[triangle2[0]].y);
+            for (let i = 0; i < currentStep; i++) {
+                ctx.lineTo(points[triangle2[i + 1]].x, points[triangle2[i + 1]].y);
+            }
+            ctx.strokeStyle = color.triangle2;
+            ctx.lineWidth = 2;
+            ctx.shadowColor = color.triangle2;
+            ctx.shadowBlur = 8;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // 绘制当前正在绘制的线段
+            if (currentStep < totalSteps) {
+                // 正三角形的当前边 - 添加发光效果
+                const fromPoint1 = points[triangle1[currentStep]];
+                const toPoint1 = points[triangle1[currentStep + 1]];
+                
+                ctx.beginPath();
+                ctx.moveTo(fromPoint1.x, fromPoint1.y);
+                
+                const dx1 = toPoint1.x - fromPoint1.x;
+                const dy1 = toPoint1.y - fromPoint1.y;
+                const currentX1 = fromPoint1.x + dx1 * progress;
+                const currentY1 = fromPoint1.y + dy1 * progress;
+                
+                ctx.lineTo(currentX1, currentY1);
+                ctx.strokeStyle = color.triangle1;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = color.triangle1;
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                // 倒三角形的当前边 - 添加发光效果
+                const fromPoint2 = points[triangle2[currentStep]];
+                const toPoint2 = points[triangle2[currentStep + 1]];
+                
+                ctx.beginPath();
+                ctx.moveTo(fromPoint2.x, fromPoint2.y);
+                
+                const dx2 = toPoint2.x - fromPoint2.x;
+                const dy2 = toPoint2.y - fromPoint2.y;
+                const currentX2 = fromPoint2.x + dx2 * progress;
+                const currentY2 = fromPoint2.y + dy2 * progress;
+                
+                ctx.lineTo(currentX2, currentY2);
+                ctx.strokeStyle = color.triangle2;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = color.triangle2;
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                progress += 0.05;
+                
+                if (progress >= 1) {
+                    progress = 0;
+                    currentStep++;
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 绘制圆形冲击波
+        function drawCircles() {
+            let circleProgress = 0;
+            
+            // 添加旋转效果
+            container.style.animation = 'rotate 4s linear infinite';
+            
+            function animateCircles() {
+                if (circleProgress > 1.5) {
+                    // 动画完成，开始消失
+                    setTimeout(() => {
+                        container.style.transition = 'opacity 0.5s ease-out';
+                        container.style.opacity = '0';
+                        setTimeout(() => {
+                            if (container.parentNode) {
+                                container.parentNode.removeChild(container);
+                            }
+                        }, 500);
+                    }, 300);
+                    return;
+                }
+                
+                // 清除画布
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制六芒星 - 添加发光效果
+                ctx.beginPath();
+                ctx.moveTo(points[triangle1[0]].x, points[triangle1[0]].y);
+                for (let i = 0; i < triangle1.length - 1; i++) {
+                    ctx.lineTo(points[triangle1[i + 1]].x, points[triangle1[i + 1]].y);
+                }
+                ctx.strokeStyle = color.triangle1;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = color.triangle1;
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                ctx.beginPath();
+                ctx.moveTo(points[triangle2[0]].x, points[triangle2[0]].y);
+                for (let i = 0; i < triangle2.length - 1; i++) {
+                    ctx.lineTo(points[triangle2[i + 1]].x, points[triangle2[i + 1]].y);
+                }
+                ctx.strokeStyle = color.triangle2;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = color.triangle2;
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                // 绘制内切圆（完美切于六芒星内部）- 添加发光效果
+                if (circleProgress >= 0.1) {
+                    const innerCircleProgress = Math.min(1, circleProgress / 0.3);
+                    // 内切圆半径计算
+                    const innerCircleRadius = radius * Math.cos(Math.PI/6) * innerCircleProgress;
+                    
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, innerCircleRadius, 0, Math.PI * 2);
+                    ctx.strokeStyle = color.innerCircle;
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = color.glowColor1;
+                    ctx.shadowBlur = 12;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+                
+                // 绘制内层圆环（完美包裹六芒星）- 添加发光效果
+                if (circleProgress >= 0.2) {
+                    const innerProgress = Math.min(1, (circleProgress - 0.2) / 0.3);
+                    const innerRadius = radius * innerProgress;
+                    
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
+                    
+                    // 创建渐变
+                    const gradient = ctx.createRadialGradient(
+                        centerX, centerY, 0,
+                        centerX, centerY, innerRadius
+                    );
+                    gradient.addColorStop(0, color.innerRingStart);
+                    gradient.addColorStop(0.5, color.innerRingMid);
+                    gradient.addColorStop(1, color.innerRingEnd);
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = color.glowColor2;
+                    ctx.shadowBlur = 12;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+                
+                // 绘制外层圆环（双层）- 略微降低粗度并添加发光效果
+                if (circleProgress >= 0.5) {
+                    const outerProgress = Math.min(1, (circleProgress - 0.5) / 0.5);
+                    const outerRadius = radius + 12 * outerProgress;
+                    
+                    // 第一层圆环（内层）- 略微降低粗度
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, outerRadius - 2.4, 0, Math.PI * 2);
+                    ctx.strokeStyle = color.outerRing1;
+                    ctx.lineWidth = 2.4;
+                    ctx.shadowColor = color.glowColor1;
+                    ctx.shadowBlur = 12;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    
+                    // 第二层圆环（外层）- 略微降低粗度
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, outerRadius + 2.4, 0, Math.PI * 2);
+                    ctx.strokeStyle = color.outerRing2;
+                    ctx.lineWidth = 2.4;
+                    ctx.shadowColor = color.glowColor2;
+                    ctx.shadowBlur = 12;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+                
+                circleProgress += 0.03;
+                requestAnimationFrame(animateCircles);
+            }
+            
+            animateCircles();
+        }
+        
+        // 开始动画
+        animate();
+    }
+</script>
+
+</body>
+
+
+<!-- Mirrored from www.tomys.top/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Mar 2025 03:32:12 GMT -->
+</html>
