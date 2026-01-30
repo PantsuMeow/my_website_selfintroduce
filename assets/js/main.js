@@ -1,5 +1,3 @@
-/*var api = "https://blog.tomys.top/";*/
-
 $(document).ready(function () {
     $(".loading").hide();
     getAchieves();
@@ -18,37 +16,6 @@ function switchTo(target) {
     $(target).addClass('active');
 }
 
-/*function getAchieves() {
-    t = ``;
-    $.ajax({
-        type: "GET",
-        url: api + "wp-json/wp/v2/posts?per_page=10&page=1&_fields=date,title,link",
-        dataType: "json",
-        success: function (json) {
-            for (var i = 0; i < json.length; i++) {
-                title = json[i].title.rendered;
-                link = json[i].link;
-                time = new Date(json[i].date).Format("yyyy-MM-dd");
-                t += `<li><a href="${link}" target="_blank">${title} <span class="meta">/ ${time}</span></a></li>`;
-                $('.archive-list').html(t);
-            }
-        }
-    })
-}
-
-function getHitokoto() {
-    $.ajax({
-        url: "https://api.tomys.top/api/hitokoto?c=a",
-        dataType: "json",
-        success: function (result) {
-            write(result.hitokoto + " —— " + result.from);
-        },
-        error: function () {
-            write("Error...");
-        }
-    });
-}
-*/
 function write(text) {
     if (text.length <= 50) {
         $('#hitokoto').html(text);
