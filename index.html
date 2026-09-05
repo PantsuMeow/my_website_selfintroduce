@@ -140,6 +140,97 @@
           pointer-events: none;
       }
   </style>
+
+  <!-- 标签云样式 -->
+  <style>
+    /* ===== 标签云 ===== */
+    .tags-intro {
+      margin-bottom: 20px;
+      opacity: 0.85;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .tag-cloud .tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.4;
+      /* 兜底色（未设 --tag-color 时使用） */
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      /* 入场动画：从小到大 + 淡入（初始状态） */
+      opacity: 0;
+      transform: scale(0);
+      animation: tag-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /*
+     * 标签颜色（高饱和霓虹色系）
+     * -------------------------------------------------------------
+     * 色值由 JS 通过 CSS 变量 --tag-color 注入，此处统一承接。
+     * 文字用对应实色 + 同色发光阴影，对比度与辨识度拉满；
+     * 颜色的新增 / 修改只需改 assets/js/tags.js 的 TAG_COLORS，
+     * 此处无需再为每个色号新增 class。
+     * -------------------------------------------------------------
+     */
+    .tag-cloud .tag {
+      color: var(--tag-color, #fff);
+      border-color: var(--tag-color, rgba(255, 255, 255, 0.25));
+      background: color-mix(in srgb, var(--tag-color, #fff) 12%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--tag-color, #fff) 35%, transparent);
+      font-weight: 600;
+    }
+
+    .tag-cloud .tag:hover {
+      transform: scale(1.12);
+      /* hover 时提亮并加强发光 */
+      filter: brightness(1.15);
+      background: color-mix(in srgb, var(--tag-color, #fff) 25%, transparent);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--tag-color, #fff) 65%, transparent);
+    }
+
+    /* 从小到大 + 淡入 */
+    @keyframes tag-pop-in {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 不同权重对应不同字号，营造"云"的层次感 */
+    .tag-cloud .tag.size-1 { font-size: 13px; }
+    .tag-cloud .tag.size-2 { font-size: 15px; }
+    .tag-cloud .tag.size-3 { font-size: 18px; }
+    .tag-cloud .tag.size-4 { font-size: 21px; }
+    .tag-cloud .tag.size-5 { font-size: 24px; }
+
+    /*
+     * 保留 color-N 兼容层：当 JS 未注入 --tag-color 时作为兜底。
+     * 配色与 TAG_COLORS 一一对应（高饱和霓虹色）。
+     */
+    .tag-cloud .tag.color-0 { --tag-color: #FF3D8B; }
+    .tag-cloud .tag.color-1 { --tag-color: #22D3EE; }
+    .tag-cloud .tag.color-2 { --tag-color: #FFC83D; }
+    .tag-cloud .tag.color-3 { --tag-color: #39E075; }
+    .tag-cloud .tag.color-4 { --tag-color: #B57BFF; }
+  </style>
 </head>
 
 <body>
@@ -190,6 +281,9 @@
                 <a goto="#contact">站点</a>
               </li>
               <li>
+                <a goto="#tags">标签</a>
+              </li>
+              <li>
                 <a goto="#donate">捐赠</a>
               </li>
             </ul>
@@ -232,6 +326,13 @@
                   <span>Ciallo~</span>
                 </a>
               </div>
+            </section>
+            <section id="tags">
+              <p class="tags-intro"><br></p>
+              <h1 style="color: rgb(255,105,180);">标签云</h1>
+              <p class="tags-intro"><br></p>
+              <!-- 标签云容器：标签由 assets/js/tags.js 根据数组自动渲染 -->
+              <div id="tag-cloud" class="tag-cloud" aria-live="polite"></div>
             </section>
             <section id="donate">
               <h1>投喂我！</h1>
@@ -734,6 +835,45 @@
         // 开始动画
         animate();
     }
+</script>
+
+<!-- 标签云：数据与渲染逻辑 -->
+<script src="assets/js/tags.js"></script>
+<script>
+  /**
+   * 每次切换到"标签"栏（#tags 获得 .active）时，
+   * 清空并重新渲染标签云，使"从小到大"的入场动画重新播放。
+   * 若只想在首次加载时播放一次动画，可删除本脚本。
+   */
+  (function () {
+    var tagsSection = document.getElementById('tags');
+    var cloud = document.getElementById('tag-cloud');
+    if (!tagsSection || !cloud || typeof renderTagCloud !== 'function') return;
+
+    // 初始先清空（避免与 DOMContentLoaded 时重复渲染），由观察器统一控制
+    function replay() {
+      cloud.innerHTML = '';
+      renderTagCloud();
+    }
+
+    // 首次进入（页面加载时若标签栏已是 active）也播放一次
+    if (tagsSection.classList.contains('active')) {
+      // 等待初始渲染完成后再覆盖，确保动画生效
+      setTimeout(replay, 0);
+    }
+
+    // 监听右侧 section 切换：观察 #tags 的 class 变化
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        if (m.attributeName === 'class') {
+          if (tagsSection.classList.contains('active')) {
+            replay();
+          }
+        }
+      });
+    });
+    observer.observe(tagsSection, { attributes: true });
+  }());
 </script>
 
 </body>
