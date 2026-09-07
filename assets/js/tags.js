@@ -37,10 +37,10 @@ const TAG_LIST = [
   { name: '屯屯鼠',url: '', weight: 2, color: 3 },
   { name: '萝莉控',     url: '', weight: 3 },
   { name: '技术宅', url: '', weight: 3 },
-  { name: 'ヨスガノソラ',    url: '', weight: 2 },
+  { name: '母胎单身',    url: '', weight: 2 },
   { name: '裤袜控',   url: '', weight: 2 },
   { name: '纯爱战士',     url: '', weight: 4 },
-  { name: 'Ciallo',  url: 'https://blog.pantsu0721.top/ciallo/ciallo.html', weight: 3, color: 0 }
+  { name: 'Ciallo~',  url: 'https://blog.pantsu0721.top/ciallo/ciallo.html', weight: 3, color: 0 }
 ];
 
 /**
