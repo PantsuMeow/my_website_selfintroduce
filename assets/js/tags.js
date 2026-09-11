@@ -34,7 +34,7 @@ const TAG_LIST = [
   { name: 'Github', url: 'https://github.com/PantsuMeow', weight: 2 },
   { name: '腿控',   url: '', weight: 2 },
   { name: '大模型',   url: '', weight: 3 },
-  { name: '屯屯鼠',url: '', weight: 2, color: 3 },
+  { name: '旅游',url: '', weight: 2, color: 3 },
   { name: '萝莉控',     url: '', weight: 3 },
   { name: '技术宅', url: '', weight: 3 },
   { name: '母胎单身',    url: '', weight: 2 },
