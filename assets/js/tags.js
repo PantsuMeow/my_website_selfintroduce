@@ -40,6 +40,7 @@ const TAG_LIST = [
   { name: '母胎单身',    url: '', weight: 2 },
   { name: '裤袜控',   url: '', weight: 2 },
   { name: '纯爱战士',     url: '', weight: 4 },
+  { name: '古典音乐',     url: '', weight: 3 },
   { name: 'Ciallo~',  url: 'https://blog.pantsu0721.top/ciallo/ciallo.html', weight: 3, color: 0 }
 ];
 
