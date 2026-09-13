@@ -32,6 +32,7 @@ const TAG_LIST = [
   { name: '追番',     url: '', weight: 5, color: 0 },
   { name: '新海诚',   url: '', weight: 4 },
   { name: 'Python',     url: '', weight: 3 },
+  { name: '游戏开发',     url: '', weight: 4 },
   { name: '过膝袜控',   url: '', weight: 4 },
   { name: '阴角',     url: '', weight: 2 },
   { name: 'Github', url: 'https://github.com/PantsuMeow', weight: 2 },
@@ -45,6 +46,7 @@ const TAG_LIST = [
   { name: '裤袜控',   url: '', weight: 2 },
   { name: '纯爱战士',     url: '', weight: 4 },
   { name: '古典音乐',     url: '', weight: 3 },
+  { name: '甜点心',     url: '', weight: 2 },
   { name: 'Ciallo~',  url: 'https://blog.pantsu0721.top/ciallo/ciallo.html', weight: 3, color: 0 }
 ];
 
